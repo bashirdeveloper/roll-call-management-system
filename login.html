@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RCM sytem login</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome CDN link for icons -->
+   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+</head>
+
+<body>
+    
+  
+  <div class="wrapper">
+   
+     <img src="lanps_logo.png" class="img-fluid" style="align-content: center;">
+         <div class="title"><span>ROLL CALL MANAGEMENT SYSTEM</span></div>
+     
+        <form action="login.php" method="POST">
+            <div class="row">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+        </div>
+      <div class="row">
+        <i class="fas fa-lock"></i>
+         
+            <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+           
+            <div class="row button">
+     <!-- <input  href="dashboard.html" type="submit"><i class="icon-signin icon-large"></i> Login </input> -->
+     <input type="submit" onclick="validateLogin()" value="Login" />
+   </div>
+
+        </form>
+
+        <?php if (isset($_GET['error'])): ?>
+            <!-- <p style="color: red;"><p style="color: red;">Invalid login</p> -->
+</p>
+        <?php endif; ?>
+    </div>
+</body>
+</html>

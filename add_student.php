@@ -1,0 +1,226 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: login.html");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Roll Call management system</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: white;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+    /*@media screen and (min-width: 912px) {
+       .content {margin-left: 200px} */
+     /* Make the sidebar fixed */
+    .fixed-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 390px;
+      height: 100%; /* Full height */
+      background-color: #f8f8f8;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+
+    /* Add some padding to the content area to prevent overlap */
+    .content-area {
+      margin-left: 220px; /* Adjust margin to account for sidebar width */
+      padding: 20px;
+    }
+    
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#"><img src="lanps_logo.png" height="50%" width="30%"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">RCM System</a></li>
+        <li><a href="#">Users</a></li>
+        <li class="active"><a href="primaryone.php">Primary One</a></li>
+        <li ><a href="primarytwo.php">Primary Two</a></li>
+        <li ><a href="primarythree.php">Primary Three</a></li>
+        <li><a href="primaryfour.php">Primary Four</a></li>
+        <li><a href="primaryfive.php">Primary Five</a></li>
+        <li><a href="primarysix.php">Primary Six</a></li>
+        <li><a href="primaryseven.php">Primary Seven</a></li>
+        <li><a href="student_registration.php">Add Students </a></li> 
+        <li><a href="logout.php">Logout</a></li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav hidden-xs">
+      <div class="fixed-sidebar">
+      <!-- <h4 class="text-primary">ROLLCALL MANAGEMENT SYSTEM</h4> -->
+      <img src="lanps_logo.png">
+      <style >
+        img{
+      height: 80px;
+  width: 80%;
+  
+    }
+      </style>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#section1">RCM System</a></li>
+        <li><a href="#">Users</a></li>
+        <li><a href="primaryone.php">Primary One</a></li>
+        <li><a href="primarytwo.php">Primary Two</a></li>
+        <li><a href="primarythree.php">Primary Three</a></li>
+        <li><a href="primaryfour.php">Primary Four</a></li>
+        <li><a href="primaryfive.php">Primary Five</a></li>
+        <li><a href="primarysix.php">Primary Six</a></li>
+        <li><a href="primaryseven.php">Primary Seven</a></li>
+        <li><a href="student_registration.php">Add Students </a></li>
+          <li><a href="logout.php">Logout</a></li>
+      </ul><br>
+    </div>
+  </div>
+    <br>
+   <div class="content">
+    <div class="col-sm-9">
+      <div class="well">
+        <h4 class="text-primary">Roll Call Management System</h4>
+         <p>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</p>
+      </div>
+      <div class="container-fluid">
+        <div class="col-sm-12" >
+          <div class="well bg-info text-white">
+          
+<?php
+$host = "localhost";
+$db_name = "roll_call_system";
+$username = "root"; // Change this to your MySQL username
+$password = ""; // Change this to your MySQL password
+
+$conn = new mysqli($host, $username, $password, $db_name);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $first_name = $_POST['firstname'];
+    $last_name = $_POST['lastname'];
+    $level = $_POST['level']; // Expected values: primary, secondary, college
+
+    // Determine the table based on the level
+    $table = '';
+    if ($level === 'one') {
+        $table = 'students';
+    } elseif ($level === 'two') {
+        $table = 'primary2';
+    } elseif ($level === 'three') {
+        $table = 'primary3';
+    }elseif ($level === 'four') {
+        $table = 'primary4';
+     }
+     elseif ($level === 'five') {
+        $table = 'primary5';
+     }elseif ($level === 'six') {
+        $table = 'primary6';
+     }elseif ($level === 'seven') {
+        $table = 'primary7';
+     }
+
+     else {
+        die("Invalid level selected.");
+    }
+
+    // Prepare SQL query
+    $stmt = $conn->prepare("INSERT INTO $table (first_name, last_name) VALUES (?, ?)");
+    $stmt->bind_param("ss", $first_name, $last_name);
+
+    // Execute the query
+   if ($stmt->execute()) {
+        // Get the ID of the last inserted row
+        $last_id = $conn->insert_id;
+
+        // Retrieve the added student's details
+        $result = $conn->query("SELECT * FROM $table WHERE id = $last_id");
+
+        if ($result && $result->num_rows > 0) {
+            $student = $result->fetch_assoc();
+
+//            echo "<h4>Student Added Successfully</h4>";
+// echo "<table border='1' style='border-collapse: collapse; width: 50%; text-align: left;'>";
+// echo "<tr>";
+// echo "<th style='padding: 8px;'>ID</th>";
+// echo "<th style='padding: 8px;'>FIRSTNAME</th>";
+// echo "<th style='padding: 8px;'>LASTNAME</th>";
+// echo "</tr>";
+// echo "<tr>";
+// echo "<td style='padding: 8px;'>" . $student['id'] . "</td>";
+// echo "<td style='padding: 8px;'>" . $student['first_name'] . "</td>";
+// echo "<td style='padding: 8px;'>" . $student['last_name'] . "</td>";
+// echo "</tr>";
+// echo "</table>";
+
+echo "<h1>Student Added Successfully</h1>";
+echo "<table border='1' style='border-collapse: collapse; width: 60%; text-align: left;'>";
+echo "<tr>";
+echo "<th style='padding: 8px;'>ID</th>";
+echo "<th style='padding: 8px;'>FIRSTNAME</th>";
+echo "<th style='padding: 8px;'>LASTNAME</th>";
+echo "<th style='padding: 8px;' colspan='2'>ACTION</th>";  
+echo "</tr>";
+echo "<tr>";
+echo "<td style='padding: 8px;'>" . $student['id'] . "</td>";
+echo "<td style='padding: 8px;'>" . $student['first_name'] . "</td>";
+echo "<td style='padding: 8px;'>" . $student['last_name'] . "</td>";
+echo "<td style='padding: 8px;'><a href='edit_student.php?id=" . $student['id'] . "'>Edit</a></td>";  
+echo "<td style='padding: 8px;'><a href='delete_student.php?id=" . $student['id'] . "'>Delete</a></td>"; 
+echo "</tr>";
+echo "</table>";
+
+
+        } else {
+            echo "Error: Could not retrieve the added student.";
+        }
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+?>
+
+ </div>
+        </div>
+        
+      </div>
+    </div>
